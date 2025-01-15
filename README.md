@@ -42,7 +42,7 @@ pip install pandas tldextract
 Run the script as follows:
 
 ```bash
-python roundrobin_urls.py -i input.txt -o output.txt
+python RoundRobinizer.py -i input.txt -o output.txt
 ```
 
 - `-i`: Input file containing the list of URLs.
@@ -61,7 +61,7 @@ http://test.com/page5
 
 #### Command:
 ```bash
-python roundrobin_urls.py -i input.txt -o output.txt
+python RoundRobinizer.py -i input.txt -o output.txt
 ```
 
 #### Output File (`output.txt`):
@@ -78,7 +78,7 @@ http://test.com/page5
 You can also use the script in a pipeline:
 
 ```bash
-cat input.txt | python roundrobin_urls.py > output.txt
+cat input.txt | python RoundRobinizer.py > output.txt
 ```
 
 ### Progress Indicators
