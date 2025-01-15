@@ -101,7 +101,7 @@ The script provides:
 We welcome contributions to make **RoundRobinizer** even better! Feel free to:
 - Fork this repository.
 - Submit a pull request with your improvements.
-- Report issues or suggest features in the [issues section](https://github.com/your-username/round-robin-url-organizer/issues).
+- Report issues or suggest features in the [issues section](https://github.com/Victor-Security/RoundRobinizer/issues).
 
 ---
 
