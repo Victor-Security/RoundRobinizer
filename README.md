@@ -8,6 +8,7 @@
 
 - **Domain-Based Grouping**: Extracts and groups URLs by their domains for organized processing.
 - **Round-Robin Distribution**: Balances URL processing across domains in a cyclic manner.
+- **Fuzz Pattern Integration**: Append fuzzing patterns to URLs in round-robin order for advanced testing scenarios.
 - **Scalable Performance**: Handles large datasets efficiently, powered by `pandas` and `tldextract`.
 - **User-Friendly CLI**: Easily integrates into pipelines for automation and batch operations.
 
@@ -35,7 +36,7 @@ pip install pandas tldextract
 ### Input and Output Formats
 
 - **Input**: A plain text file (`.txt`) with one URL per line.
-- **Output**: A plain text file with URLs reordered in a round-robin pattern.
+- **Output**: A plain text file with URLs reordered in a round-robin pattern or fuzzed URLs based on provided patterns.
 
 ### Command-Line Usage
 
@@ -46,11 +47,17 @@ python RoundRobinizer.py -i input.txt -o output.txt
 ```
 
 - `-i`: Input file containing the list of URLs.
-- `-o`: Output file to save the reordered URLs.
+- `-o`: Output file to save the reordered or fuzzed URLs.
+- `--fuzz`: Optional, path to a file containing fuzzing patterns.
+- `--mode`: Choose between:
+  - `roundrobinizer`: Reorder URLs into a round-robin pattern.
+  - `roundrobinizerfuzzlist`: Append fuzzing patterns to URLs in round-robin order.
 
 ### Example
 
-#### Input File (`input.txt`):
+#### Reordering URLs
+
+**Input File (`input.txt`):**
 ```
 http://example.com/page1
 https://sub.example.com/page2
@@ -59,12 +66,12 @@ https://example.com/page4
 http://test.com/page5
 ```
 
-#### Command:
+**Command:**
 ```bash
-python RoundRobinizer.py -i input.txt -o output.txt
+python RoundRobinizer.py -i input.txt -o output.txt --mode roundrobinizer
 ```
 
-#### Output File (`output.txt`):
+**Output File (`output.txt`):**
 ```
 http://example.com/page1
 http://test.com/page3
@@ -73,13 +80,34 @@ https://example.com/page4
 http://test.com/page5
 ```
 
-### Pipeline Usage
+#### Generating Fuzzed URLs
 
-You can also use the script in a pipeline:
-
-```bash
-cat input.txt | python RoundRobinizer.py > output.txt
+**Fuzz File (`fuzz_patterns.txt`):**
 ```
+!.gitignore
+.env
+config.php
+```
+
+**Command:**
+```bash
+python RoundRobinizer.py -i input.txt -o fuzzed_output.txt --fuzz fuzz_patterns.txt --mode roundrobinizerfuzzlist
+```
+
+**Output File (`fuzzed_output.txt`):**
+```
+https://example.com/!.gitignore
+https://test.com/!.gitignore
+https://sub.example.com/!.gitignore
+https://example.com/.env
+https://test.com/.env
+https://sub.example.com/.env
+https://example.com/config.php
+https://test.com/config.php
+https://sub.example.com/config.php
+```
+
+---
 
 ### Progress Indicators
 
@@ -89,7 +117,7 @@ The script provides:
   ```
   Powered by Victor Security (https://victorsecurity.com.br)
 
-  Number of unique domains: 2
+  Number of unique domains: 3
   Processing Round-Robin Algorithm...
   Please wait...
   ```
@@ -115,3 +143,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 **Powered by [Victor Security](https://victorsecurity.com.br)**  
 Innovating web security solutions with performance, scalability, and efficiency in mind.
+
