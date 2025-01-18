@@ -19,15 +19,22 @@
 ### Prerequisites
 
 - Python 3.8 or higher
-- Required libraries:
-  - `pandas`
-  - `tldextract`
 
 Install dependencies with pip:
 
 ```bash
-pip install pandas tldextract
+pip install -r requirements.txt
 ```
+
+### Cloning the Repository
+
+To download the project and its folder structure, clone the repository using git:
+
+```bash
+git clone https://github.com/Victor-Security/RoundRobinizer.git
+```
+
+This will create a folder named `RoundRobinizer` containing all the necessary files and directories.
 
 ---
 
