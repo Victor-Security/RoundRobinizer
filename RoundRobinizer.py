@@ -28,7 +28,7 @@ def roundrobin_domains(df):
     """
     df['group_idx'] = df.groupby('domain').cumcount()
     df.sort_values(by=['group_idx', 'domain'], inplace=True)
-    return df[['domain']].drop_duplicates()
+    return df[['url']]
 
 def generate_fuzz_list(domains, fuzz_patterns, output_file):
     """
@@ -44,7 +44,7 @@ def generate_fuzz_list(domains, fuzz_patterns, output_file):
     """
     with open(output_file, 'w') as outfile:
         for pattern in fuzz_patterns:
-            fuzzed_urls = [f"https://{domain}/{pattern}" for domain in domains['domain']]
+            fuzzed_urls = [f"{domain}/{pattern}" for domain in domains['url']]
             fuzzed_df = pd.DataFrame({'url': fuzzed_urls})
             fuzzed_df['url'].to_csv(outfile, index=False, header=False, mode='a', lineterminator='\n')
 
@@ -137,14 +137,17 @@ def main():
             with open(args.input, 'r') as infile:
                 urls = pd.DataFrame({'url': [line.strip() for line in infile if line.strip()]})
             urls['domain'] = extract_domains(urls['url'])
-
+            print(f"Number of unique domains: {urls['domain'].nunique()}")
+            print("Processing Round-Robin Algorithm for domains...")
+            print("Please wait...")
             reordered_domains = roundrobin_domains(urls)
-
             print("Generating fuzzed list...")
-            create_fuzz_list(
-                domains_file=args.input,
-                fuzz_file=args.fuzz,
-                output_file=args.output
+            with open(args.fuzz, 'r') as f:
+                fuzz_patterns = [line.strip() for line in f if line.strip()]
+            generate_fuzz_list(
+                reordered_domains,
+                fuzz_patterns,
+                args.output
             )
         except Exception as e:
             print(f"Error during fuzz list generation: {e}", file=sys.stderr)
