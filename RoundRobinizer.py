@@ -30,7 +30,7 @@ def roundrobin_domains(df):
     df.sort_values(by=['group_idx', 'domain'], inplace=True)
     return df[['url']]
 
-def generate_fuzz_list(domains, fuzz_patterns, output_file):
+def generate_fuzz_list(domains, fuzz_patterns, output_file, fuzz_separator):
     """
     Append fuzz patterns to domains while preserving round-robin order.
 
@@ -44,7 +44,7 @@ def generate_fuzz_list(domains, fuzz_patterns, output_file):
     """
     with open(output_file, 'w') as outfile:
         for pattern in fuzz_patterns:
-            fuzzed_urls = [f"{domain}/{pattern}" for domain in domains['url']]
+            fuzzed_urls = [f"{domain}{fuzz_separator}{pattern}" for domain in domains['url']]
             fuzzed_df = pd.DataFrame({'url': fuzzed_urls})
             fuzzed_df['url'].to_csv(outfile, index=False, header=False, mode='a', lineterminator='\n')
 
@@ -88,6 +88,10 @@ def main():
     )
     parser.add_argument(
         "--fuzz", type=str, help="Path to a fuzzing pattern file to generate a fuzzed list."
+    )
+    parser.add_argument(
+        "--fuzz_separator", type=str, help="Pattern that separates the domain from the fuzz pattern (default: '/')."
+        , default="/"
     )
     parser.add_argument(
         "--mode", type=str, choices=['roundrobinizer', 'roundrobinizerfuzzlist'],
@@ -147,7 +151,8 @@ def main():
             generate_fuzz_list(
                 reordered_domains,
                 fuzz_patterns,
-                args.output
+                args.output,
+                args.fuzz_separator,
             )
         except Exception as e:
             print(f"Error during fuzz list generation: {e}", file=sys.stderr)

@@ -9,6 +9,7 @@
 - **Domain-Based Grouping**: Extracts and groups URLs by their domains for organized processing.
 - **Round-Robin Distribution**: Balances URL processing across domains in a cyclic manner.
 - **Fuzz Pattern Integration**: Append fuzzing patterns to URLs in round-robin order for advanced testing scenarios.
+- **Customizable Fuzz Separators**: Define a custom separator between URLs and fuzz patterns.
 - **Scalable Performance**: Handles large datasets efficiently, powered by `pandas` and `tldextract`.
 - **User-Friendly CLI**: Easily integrates into pipelines for automation and batch operations.
 
@@ -56,6 +57,7 @@ python RoundRobinizer.py -i input.txt -o output.txt
 - `-i`: Input file containing the list of URLs.
 - `-o`: Output file to save the reordered or fuzzed URLs.
 - `--fuzz`: Optional, path to a file containing fuzzing patterns.
+- `--fuzz_separator`: Optional, defines the separator between the URL and fuzz pattern (default: `/`).
 - `--mode`: Choose between:
   - `roundrobinizer`: Reorder URLs into a round-robin pattern.
   - `roundrobinizerfuzzlist`: Append fuzzing patterns to URLs in round-robin order.
@@ -87,7 +89,7 @@ https://example.com/page4
 http://test.com/page5
 ```
 
-#### Generating Fuzzed URLs
+#### Generating Fuzzed URLs with Custom Separator
 
 **Fuzz File (`fuzz_patterns.txt`):**
 ```
@@ -96,7 +98,7 @@ http://test.com/page5
 config.php
 ```
 
-**Command:**
+**Command (Using Default `/` Separator):**
 ```bash
 python RoundRobinizer.py -i input.txt -o fuzzed_output.txt --fuzz fuzz_patterns.txt --mode roundrobinizerfuzzlist
 ```
@@ -112,6 +114,24 @@ https://sub.example.com/.env
 https://example.com/config.php
 https://test.com/config.php
 https://sub.example.com/config.php
+```
+
+**Command (Using `-` as Separator):**
+```bash
+python RoundRobinizer.py -i input.txt -o fuzzed_output_custom.txt --fuzz fuzz_patterns.txt --fuzz_separator "-" --mode roundrobinizerfuzzlist
+```
+
+**Output File (`fuzzed_output_custom.txt`):**
+```
+https://example.com-!.gitignore
+https://test.com-!.gitignore
+https://sub.example.com-!.gitignore
+https://example.com-.env
+https://test.com-.env
+https://sub.example.com-.env
+https://example.com-config.php
+https://test.com-config.php
+https://sub.example.com-config.php
 ```
 
 ---
